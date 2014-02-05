@@ -111,6 +111,45 @@ class Timespan extends CActiveRecord {
                     'criteria' => $criteria,
                 ));
     }
+    
+     public function searchIncludingTime($parentID)
+    {
+        /* This function creates a dataprovider with RolePermission
+        models, based on the parameters received in the filtering-model.
+        It also includes related Permission models, obtained via the
+        relPermission relation. */
+        $criteria=new CDbCriteria;
+        $criteria->with=array('timespan');
+        $criteria->together = true;
+ 
+ 
+        /* filter on role-grid PK ($parentID) received from the 
+        controller*/
+        $criteria->compare('t.timespan_userID',$parentID,false); 
+ 
+        /* Filter on default Model's column if user entered parameter*/
+        //$criteria->compare('t.permission_id',$this->permission_id,true);
+ 
+        /* Filter on related Model's column if user entered parameter*/
+       // $criteria->compare('relPermission.permission_desc',
+          //  $this->permission_desc_param,true);
+ 
+        /* Sort on related Model's columns */
+        //$sort = new CSort;
+//        $sort->attributes = array(
+//            'permission_desc_param' => array(
+//            'asc' => 'permission_desc',
+//            'desc' => 'permission_desc DESC',
+//            ), '*', /* Treat all other columns normally */
+//        );
+        /* End: Sort on related Model's columns */
+ 
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+            //'sort'=>$sort, /* Needed for sort */
+        ));
+    }
+
 
     /**
      * Returns the static model of the specified AR class.

@@ -253,3 +253,6 @@ div.search-form
     padding:0;
     background-color:#eee;
      }
+.loadGIF {
+    background: black url(/main/sub/css/images/general/loading.gif) left center no-repeat ;
+}     

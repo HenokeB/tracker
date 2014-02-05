@@ -36,14 +36,14 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 <?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
 <div class="search-form" style="display:none">
 <?php $this->renderPartial('_search',array(
-	'model'=>$model,
+	'model'=>$parent_model,
 )); ?>
 </div><!-- search-form -->
-
+<div id="parentView">
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'user-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+	'dataProvider'=>$parent_model->search(),
+	'filter'=>$parent_model,
 	'columns'=>array(
 		'id',
 		'username',
@@ -67,4 +67,32 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 			'class'=>'CButtonColumn',
 		),
 	),
+    'ajaxUpdate' => 'childView', //or 'ajaxUpdate' => 'child-grid'
 )); ?>
+
+ </div>
+
+<!-- Use this paragraph to display the loading.gif icon above the Child Gridview,
+while waiting for the ajax response -->
+<p id="loadingPic"></br></p>
+ 
+<!-- The childView <div>, renders the _child form, which contains the Child Gridview.
+The ajax response will replace/update the whole <div> and not just the gridview. -->
+
+
+<div id="childView">
+    <?php
+        $this->renderPartial('_child', array(
+        'child_model' => $child_model, 
+        'parentID' => $parentID, 
+        ))
+    ?>
+</div>
+
+<?php
+    /*Load the javascript file that contains our own ajax function*/
+    $path = Yii::app()->baseUrl.'/js/customFunctions.js';
+    Yii::app()->clientScript->registerScriptFile($path,
+    CClientScript::POS_END);
+?>
+
